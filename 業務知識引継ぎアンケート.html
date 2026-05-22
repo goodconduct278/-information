@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>業務知識・引継ぎアンケート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --paper: #fbfaf7;
+    --paper-2: #ffffff;
+    --line: #e6e1d6;
+    --line-2: #d8d2c2;
+    --ink: #1c1d22;
+    --ink-2: #4a4d57;
+    --ink-3: #7e8290;
+    --muted: #a3a6b0;
+    --accent: #2e3a6e;
+    --accent-2: #4259a3;
+    --accent-soft: #e7ecf8;
+    --accent-soft-2: #d9e0f3;
+    --warn: #b76a1f;
+    --warn-soft: #fdf3e1;
+    --warn-soft-2: #fbe6bd;
+    --ok: #2f7a4a;
+    --ok-soft: #e3f1e6;
+    --shadow-sm: 0 1px 0 rgba(20,22,30,.04), 0 2px 6px rgba(20,22,30,.04);
+    --shadow-md: 0 8px 28px rgba(28,30,40,.08), 0 2px 6px rgba(28,30,40,.05);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    font-feature-settings: "palt" 1; -webkit-font-smoothing: antialiased;
+  }
+  body { min-height: 100vh; }
+
+  /* ── Topbar ─────────────────────────── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-inner {
+    max-width: 1240px; margin: 0 auto; padding: 18px 28px 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .brand-mark {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center;
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-weight: 900; font-size: 22px; letter-spacing: -.02em;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.18);
+    flex-shrink: 0;
+  }
+  .brand-title {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-weight: 700; font-size: 19px; letter-spacing: .01em; line-height: 1.2;
+  }
+  .brand-sub { font-size: 12.5px; color: var(--ink-3); margin-top: 3px; max-width: 720px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  /* Buttons */
+  .btn {
+    appearance: none; border: 1px solid var(--line-2); background: var(--paper-2);
+    color: var(--ink); font: inherit; font-weight: 600; font-size: 13px;
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+    transition: background .15s, border-color .15s, transform .04s;
+  }
+  .btn:hover { border-color: var(--accent-2); }
+  .btn:active { transform: translateY(1px); }
+  .btn--primary {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    box-shadow: 0 1px 0 rgba(0,0,0,.12);
+  }
+  .btn--primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn--ghost { background: transparent; }
+  .btn--lg { font-size: 15px; padding: 12px 22px; border-radius: 10px; }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+  /* Mode tabs */
+  .mode-tabs {
+    max-width: 1240px; margin: 4px auto 0; padding: 0 28px;
+    display: flex; gap: 6px;
+  }
+  .mode-tab {
+    appearance: none; background: transparent; border: 1px solid transparent;
+    border-bottom: none; border-radius: 10px 10px 0 0;
+    padding: 10px 16px 12px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    color: var(--ink-3); font: inherit; min-width: 180px;
+    border-bottom: 2px solid transparent;
+    position: relative; top: 1px;
+    transition: color .12s;
+  }
+  .mode-tab:hover { color: var(--ink); }
+  .mode-tab.is-active {
+    background: var(--paper); border-color: var(--line);
+    border-bottom: 2px solid var(--accent); color: var(--ink);
+  }
+  .mode-tab-label { font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+  .mode-tab-meta { font-size: 11.5px; color: var(--ink-3); }
+
+  /* Progress */
+  .progress-row {
+    max-width: 1240px; margin: 0 auto; padding: 10px 28px 14px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .progress-bar {
+    flex: 1; height: 6px; border-radius: 999px; background: var(--line);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .25s ease;
+    border-radius: 999px;
+  }
+  .progress-text {
+    font-variant-numeric: tabular-nums; font-size: 13px; color: var(--ink-2);
+    display: flex; align-items: baseline; gap: 4px;
+    min-width: 110px; justify-content: flex-end;
+  }
+  .progress-num { font-weight: 700; font-size: 16px; color: var(--ink); }
+  .progress-sep { color: var(--ink-3); }
+  .progress-pct {
+    margin-left: 8px; padding: 2px 8px; border-radius: 99px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 12px;
+  }
+
+  /* ── Layout ──────────────────────────── */
+  .content {
+    max-width: 1240px; margin: 0 auto; padding: 28px;
+    display: grid; grid-template-columns: 240px 1fr; gap: 28px;
+    align-items: start;
+  }
+  .intro-card {
+    grid-column: 1 / -1;
+    background: var(--warn-soft); border: 1px solid var(--warn-soft-2);
+    color: #6b4814; padding: 12px 16px; border-radius: var(--radius);
+    font-size: 14px;
+  }
+
+  /* TOC */
+  .toc {
+    position: sticky; top: 180px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 12px; max-height: calc(100vh - 220px); overflow: auto;
+  }
+  .toc-title {
+    font-size: 11px; font-weight: 700; color: var(--ink-3);
+    letter-spacing: .14em; text-transform: uppercase; padding: 4px 8px 8px;
+  }
+  .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .toc-item {
+    width: 100%; text-align: left;
+    appearance: none; background: transparent; border: 0; cursor: pointer;
+    padding: 8px 10px; border-radius: 8px;
+    display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center;
+    font: inherit; font-size: 13px; color: var(--ink-2);
+    border-left: 3px solid transparent;
+    line-height: 1.35;
+    transition: background .1s, color .1s;
+  }
+  .toc-item:hover { background: #f0ecdf; }
+  .toc-item.is-active {
+    background: var(--accent-soft); color: var(--accent);
+    border-left-color: var(--accent); font-weight: 600;
+  }
+  .toc-num {
+    font-family: "Zen Kaku Gothic New"; font-weight: 700; font-size: 12px;
+    color: var(--ink-3); font-variant-numeric: tabular-nums;
+  }
+  .toc-item.is-active .toc-num { color: var(--accent); }
+  .toc-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toc-count {
+    font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums;
+    padding: 1px 6px; border-radius: 99px; background: var(--line);
+  }
+  .toc-item.is-complete .toc-count { background: var(--ok-soft); color: var(--ok); }
+  .toc-item.is-active.is-complete .toc-count { background: var(--ok); color: #fff; }
+
+  /* ── Sections ───────────────────────── */
+  .sections { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .section {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px 28px 26px;
+    box-shadow: var(--shadow-sm);
+    scroll-margin-top: 200px;
+  }
+  .section-head {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding-bottom: 16px; margin-bottom: 18px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .section-num {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent);
+    font-family: "Zen Kaku Gothic New", sans-serif; font-weight: 800; font-size: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+  .section-title {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 18px; font-weight: 700; margin: 4px 0 0; line-height: 1.4;
+  }
+  .section-hint {
+    font-size: 12.5px; color: var(--ink-3); margin: 6px 0 0; line-height: 1.6;
+  }
+  .section-body { display: flex; flex-direction: column; gap: 22px; }
+  .q-block { display: flex; flex-direction: column; gap: 8px; }
+
+  /* Field shells */
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field-label {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    display: flex; flex-direction: column; gap: 3px;
+    line-height: 1.5;
+  }
+  .field-label .req { color: #c0392b; margin-left: 4px; }
+  .field-hint { font-size: 12px; font-weight: 400; color: var(--ink-3); }
+
+  .input, .textarea {
+    appearance: none; width: 100%; background: var(--warn-soft);
+    border: 1px solid var(--warn-soft-2); border-radius: 8px;
+    padding: 10px 12px; font: inherit; font-size: 14px; color: var(--ink);
+    transition: border-color .12s, background .12s, box-shadow .12s;
+    line-height: 1.5;
+  }
+  .textarea { resize: vertical; min-height: 64px; font-family: inherit; }
+  .input::placeholder, .textarea::placeholder { color: #b9a778; }
+  .input:hover, .textarea:hover { border-color: #d8a653; }
+  .input:focus, .textarea:focus {
+    outline: none; background: #fff; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,58,110,.16);
+  }
+  .input:not(:placeholder-shown), .textarea:not(:placeholder-shown) {
+    background: #fff; border-color: var(--line-2);
+  }
+  .input[type="date"] { color: var(--ink); }
+
+  /* Chips (radio) */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    appearance: none; background: var(--paper); border: 1.5px solid var(--line-2);
+    color: var(--ink-2); font: inherit; font-size: 13.5px;
+    padding: 9px 14px 9px 12px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all .12s;
+  }
+  .chip:hover { border-color: var(--accent-2); color: var(--ink); }
+  .chip-dot {
+    width: 14px; height: 14px; border-radius: 999px;
+    border: 2px solid var(--line-2); background: #fff; flex-shrink: 0;
+    transition: all .12s;
+  }
+  .chip--on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chip--on .chip-dot { background: #fff; border-color: #fff; box-shadow: inset 0 0 0 3px var(--accent); }
+
+  /* Checkboxes */
+  .check-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 6px;
+  }
+  .check {
+    appearance: none; text-align: left;
+    background: var(--paper); border: 1.5px solid var(--line-2);
+    color: var(--ink-2); font: inherit; font-size: 13.5px;
+    padding: 10px 12px; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    transition: all .12s;
+  }
+  .check:hover { border-color: var(--accent-2); color: var(--ink); }
+  .check-box {
+    width: 20px; height: 20px; border-radius: 5px;
+    border: 1.5px solid var(--line-2); background: #fff;
+    display: grid; place-items: center; flex-shrink: 0;
+    font-weight: 700; color: #fff; font-size: 13px;
+    transition: all .12s;
+  }
+  .check--on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .check--on .check-box { background: var(--accent); border-color: var(--accent); }
+
+  /* Tables */
+  .table-field { display: flex; flex-direction: column; gap: 8px; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); }
+  .grid { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .grid th {
+    background: #f5f3ec; color: var(--ink-2); font-weight: 600;
+    text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line);
+    font-size: 12px; letter-spacing: .03em; white-space: nowrap;
+  }
+  .grid td {
+    padding: 4px 6px; border-bottom: 1px solid var(--line); vertical-align: middle;
+  }
+  .grid tr:last-child td { border-bottom: 0; }
+  .row-num {
+    display: inline-grid; place-items: center;
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--line); color: var(--ink-3);
+    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .example-row td {
+    background: #faf7ed; color: var(--ink-3); font-style: normal;
+    font-size: 12.5px; border-bottom: 2px solid var(--line);
+  }
+  .example-row .row-num { background: var(--warn-soft-2); color: #6b4814; }
+  .cell-input {
+    width: 100%; appearance: none; background: var(--warn-soft);
+    border: 1px solid transparent; border-radius: 5px;
+    padding: 7px 9px; font: inherit; font-size: 13px; color: var(--ink);
+    transition: all .12s;
+  }
+  .cell-input:hover { border-color: #d8a653; }
+  .cell-input:focus {
+    outline: none; background: #fff; border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(46,58,110,.18);
+  }
+  .cell-input:not(:placeholder-shown):not(:focus) { background: #fff; }
+  .cell-select { padding-right: 24px; cursor: pointer; }
+  .cell-select:invalid { color: var(--ink-3); }
+
+  .icon-btn {
+    appearance: none; background: transparent; border: 1px solid transparent;
+    width: 26px; height: 26px; border-radius: 6px;
+    color: var(--ink-3); cursor: pointer; font-size: 16px; line-height: 1;
+    transition: all .12s;
+  }
+  .icon-btn:hover { background: #fde7e3; color: #c0392b; border-color: #f5c8c0; }
+
+  .muted { color: var(--ink-3); font-weight: 400; }
+
+  /* Footer */
+  .footer-actions {
+    margin-top: 18px;
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+  .autosave-note { margin: 0; font-size: 12px; color: var(--ink-3); text-align: center; line-height: 1.8; }
+
+  /* ── Modal ───────────────────────────── */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(20,22,30,.42);
+    backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    animation: fadeIn .15s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--paper-2); border-radius: 14px;
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(20,22,30,.07);
+    width: 100%; max-width: 520px;
+    animation: slideUp .18s ease;
+    overflow: hidden;
+  }
+  @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-head {
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  }
+  .modal-eyebrow {
+    font-size: 11px; font-weight: 700; color: var(--ink-3);
+    letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .modal-title {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 18px; font-weight: 700; margin: 0; color: var(--ink);
+  }
+  .modal-close {
+    margin-top: 2px; flex-shrink: 0;
+  }
+  .modal-body {
+    padding: 18px 24px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .export-card {
+    appearance: none; text-align: left; width: 100%;
+    background: var(--paper); border: 1.5px solid var(--line);
+    border-radius: 10px; padding: 16px 18px; cursor: pointer;
+    transition: border-color .12s, background .12s, transform .06s;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .export-card:hover { border-color: var(--accent-2); background: var(--accent-soft); }
+  .export-card:active { transform: scale(.99); }
+  .export-card-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 99px;
+    background: var(--line); color: var(--ink-3);
+    letter-spacing: .04em; margin-bottom: 2px;
+  }
+  .export-card-tag.tag--primary { background: var(--accent); color: #fff; }
+  .export-card-title {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    font-size: 16px; font-weight: 700; color: var(--ink);
+  }
+  .export-card-desc { font-size: 12.5px; color: var(--ink-2); line-height: 1.65; }
+  .export-card-meta { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+  .export-card-meta b { color: var(--ink); }
+  .modal-foot {
+    padding: 14px 24px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .modal-hint {
+    font-size: 12px; color: var(--ink-3); line-height: 1.75;
+    background: var(--warn-soft); border: 1px solid var(--warn-soft-2);
+    border-radius: 8px; padding: 10px 14px; color: #6b4814;
+  }
+  .modal-hint b { font-weight: 700; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .content { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+    .toc { position: static; max-height: none; }
+    .topbar-inner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px 10px; }
+    .mode-tabs, .progress-row { padding-left: 16px; padding-right: 16px; }
+    .section { padding: 20px 18px; }
+    .brand-sub { white-space: normal; }
+    .check-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .check-grid { grid-template-columns: 1fr; }
+    .mode-tab { min-width: 0; flex: 1; }
+    .mode-tab-meta { font-size: 10.5px; }
+    .modal { margin: 0; border-radius: 14px 14px 0 0; align-self: flex-end; }
+    .modal-backdrop { align-items: flex-end; padding: 0; }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <!-- data.js -->
+  <script>
+window.SURVEY_DATA = {
+  meta: {
+    title: "業務知識・引継ぎ状況に関するアンケート",
+    subtitle: "属人化している業務知識の棚卸しと、引継ぎ・知識化の優先度を把握するためのアンケートです。",
+  },
+  options: {
+    frequency: ["毎日", "週1回程度", "月1回程度", "年数回", "不定期"],
+    role: ["主担当", "補助", "共同担当"],
+    difficulty: ["低（手順通り）", "中（経験必要）", "高（判断が必要）"],
+    successor: ["いる", "一部ならいる", "ほとんどいない", "分からない"],
+    docCoverage: ["対応できる", "おおむね対応できる", "一部難しい", "対応は難しい", "分からない"],
+    hasTrouble: ["ある", "ない", "分からない"],
+    hasDoc: ["ある", "一部ある", "ない", "分からない"],
+    docFreshness: ["最新である", "一部古い", "かなり古い", "分からない"],
+    difficulties: [
+      "手順が複雑",
+      "判断基準が分かりにくい",
+      "過去経緯を知らないと対応できない",
+      "客先・取引先ごとの注意点がある",
+      "使用する資料やファイルが分かりにくい",
+      "システム操作が難しい",
+      "例外対応が多い",
+      "経験や勘が必要",
+      "特になし",
+      "その他",
+    ],
+    docLocations: [
+      "共有フォルダ", "SharePoint", "Box", "個人フォルダ",
+      "紙資料", "メール", "過去案件フォルダ", "その他",
+    ],
+    oralReasons: [
+      "資料の場所が分かりにくい",
+      "資料が古い",
+      "判断基準が書かれていない",
+      "例外対応が書かれていない",
+      "過去経緯が分からない",
+      "実務上の注意点が書かれていない",
+      "特になし",
+      "その他",
+    ],
+    shareMethods: [
+      "手順書", "チェックリスト", "FAQ",
+      "過去トラブル事例集", "顧客・取引先ごとの注意点",
+      "業務フロー図", "動画・画面録画",
+      "担当者へのインタビュー記録",
+      "過去案件の検索DB", "AI検索・社内チャットボット", "その他",
+    ],
+    usefulScenes: [
+      "引継ぎ", "新人教育", "担当者不在時の確認",
+      "過去案件の確認", "トラブル対応", "問い合わせ対応",
+      "資料作成", "業務改善", "その他",
+    ],
+  },
+  simple: {
+    estMinutes: "5〜10分",
+    sections: [
+      {
+        id: "s_resp",
+        title: "回答者情報",
+        questions: [
+          { id: "respondent_date", type: "date", label: "回答日", required: true },
+          { id: "respondent_name", type: "text", label: "氏名（任意）", placeholder: "山田 太郎" },
+          { id: "respondent_dept", type: "text", label: "部署・係（任意）", placeholder: "営業部 第1課" },
+        ],
+      },
+      {
+        id: "s_q1",
+        title: "Q1. 現在担当している主な業務",
+        hint: "頻度：毎日／週1回程度／月1回程度／年数回／不定期　　難易度：低（手順通り）／中（経験必要）／高（判断が必要）",
+        questions: [{
+          id: "q1_tasks", type: "task_table", min: 1, max: 10,
+          example: { name: "見積作成", frequency: "不定期", role: "主担当", difficulty: "高（判断が必要）", note: "客先ごとに判断が異なる" },
+        }],
+      },
+      {
+        id: "s_q2",
+        title: "Q2. あなたが不在の場合、代わりに対応できる人はいますか",
+        questions: [
+          { id: "q2_successor", type: "radio", label: "代替担当者の有無", options: "successor" },
+          { id: "q2_note", type: "textarea", label: "補足・備考", placeholder: "誰が／どの業務なら対応できるか など" },
+        ],
+      },
+      {
+        id: "s_q3",
+        title: "Q3. 現在の資料やマニュアルだけで、他の人が業務を対応できますか",
+        questions: [
+          { id: "q3_coverage", type: "radio", label: "資料での対応可否", options: "docCoverage" },
+          { id: "q3_note", type: "textarea", label: "補足・備考" },
+        ],
+      },
+      {
+        id: "s_q4",
+        title: "Q4. 他の人が対応する場合、特に難しいと思う点",
+        hint: "複数選択できます",
+        questions: [
+          { id: "q4_difficulties", type: "checkbox", label: "該当するもの", options: "difficulties" },
+          { id: "q4_other", type: "textarea", label: "その他・補足", placeholder: "「その他」を選んだ場合や、具体例があればご記入ください" },
+        ],
+      },
+      {
+        id: "s_q5",
+        title: "Q5. 資料には書かれていないが、重要だと思う知識",
+        questions: [{
+          id: "q5_tacit", type: "textarea", rows: 5,
+          placeholder: "例）この客先は事前確認が必要／この書類は差し戻しが多い／上長確認が先に必要なケースがある",
+        }],
+      },
+      {
+        id: "s_q6",
+        title: "Q6. 過去にトラブル・手戻り・確認漏れが起きやすかった業務",
+        questions: [
+          { id: "q6_has", type: "radio", label: "トラブル有無", options: "hasTrouble" },
+          {
+            id: "q6_items", type: "trouble_table",
+            showIf: { field: "q6_has", equals: "ある" },
+            label: "「ある」場合、分かる範囲でご記入ください",
+            max: 6,
+          },
+        ],
+      },
+      {
+        id: "s_q7",
+        title: "Q7. 優先的に手順書化・知識DB化した方がよい業務",
+        questions: [{
+          id: "q7_priority", type: "name_reason_table",
+          columns: [{ key: "name", label: "業務名" }, { key: "reason", label: "理由" }],
+          max: 6,
+        }],
+      },
+      {
+        id: "s_q8",
+        title: "Q8. その他、業務知識の共有・引継ぎについて感じていること",
+        questions: [{ id: "q8_free", type: "textarea", rows: 6 }],
+      },
+    ],
+  },
+  detail: {
+    estMinutes: "15〜30分",
+    intro: "簡易版で優先度が高かった業務について、詳しく記入してください。",
+    sections: [
+      {
+        id: "d_resp",
+        title: "4-1. 回答者情報",
+        questions: [
+          { id: "d_dept", type: "text", label: "部署・係" },
+          { id: "d_main_task", type: "text", label: "主な担当業務" },
+          { id: "d_years", type: "text", label: "担当年数", placeholder: "例）3年" },
+          { id: "d_date", type: "date", label: "回答日" },
+        ],
+      },
+      {
+        id: "d_tasks",
+        title: "4-2. 担当業務の洗い出し",
+        questions: [{
+          id: "d_tasks_table", type: "task_table", max: 10,
+          example: { name: "見積作成", frequency: "不定期", role: "主担当", difficulty: "高（判断が必要）", note: "客先ごとに判断が異なる" },
+        }],
+      },
+      {
+        id: "d_risk",
+        title: "4-3. 属人化・引継ぎリスクの確認",
+        questions: [
+          { id: "d_q3_succ", type: "radio", label: "Q3. 代わりに対応できる人はいますか", options: "successor" },
+          { id: "d_q3_note", type: "textarea", label: "補足" },
+          { id: "d_q4_cov", type: "radio", label: "Q4. 資料やマニュアルだけで他の人が対応できますか", options: "docCoverage" },
+          { id: "d_q4_note", type: "textarea", label: "補足" },
+          { id: "d_q5_diff", type: "checkbox", label: "Q5. 特に難しいと思う点（複数選択可）", options: "difficulties" },
+        ],
+      },
+      {
+        id: "d_knowledge",
+        title: "4-4. 残すべき知識の確認",
+        questions: [
+          { id: "d_q6_tacit", type: "textarea", label: "Q6. 資料には書かれていないが重要だと思う知識", rows: 5 },
+          {
+            id: "d_q7_decisions", type: "table", label: "Q7. 判断に迷う場面",
+            columns: [
+              { key: "scene", label: "判断に迷う場面" },
+              { key: "basis", label: "判断材料" },
+              { key: "ask", label: "確認先" },
+              { key: "action", label: "対応方法" },
+            ], max: 6,
+          },
+          {
+            id: "d_q8_exceptions", type: "table", label: "Q8. 例外対応が発生するケース",
+            columns: [
+              { key: "case", label: "例外ケース" },
+              { key: "diff", label: "通常と異なる点" },
+              { key: "action", label: "対応方法" },
+              { key: "note", label: "注意点" },
+            ], max: 6,
+          },
+          { id: "d_q9_mistakes", type: "textarea", label: "Q9. 新人・後任者が特に間違えやすいポイント", rows: 5 },
+        ],
+      },
+      {
+        id: "d_trouble",
+        title: "4-5. 過去トラブル・手戻りの確認",
+        questions: [
+          { id: "d_q10_has", type: "radio", label: "Q10. トラブル・手戻り・確認漏れが起きやすかった業務", options: "hasTrouble" },
+          {
+            id: "d_q10_items", type: "table",
+            showIf: { field: "d_q10_has", equals: "ある" },
+            columns: [
+              { key: "name", label: "業務名" },
+              { key: "content", label: "トラブル内容" },
+              { key: "cause", label: "原因" },
+              { key: "save", label: "再発防止のために残すべき情報" },
+            ], max: 6,
+          },
+          {
+            id: "d_q11_past", type: "table", label: "Q11. 過去案件の経緯を知らないと対応が難しい業務",
+            columns: [
+              { key: "name", label: "業務名" },
+              { key: "why", label: "過去経緯が必要な理由" },
+              { key: "where", label: "経緯の保存場所" },
+            ], max: 6,
+          },
+        ],
+      },
+      {
+        id: "d_docs",
+        title: "4-6. 既存資料の確認",
+        questions: [
+          { id: "d_q12_has", type: "radio", label: "Q12. 手順書・マニュアル・参考資料はありますか", options: "hasDoc" },
+          { id: "d_q14_fresh", type: "radio", label: "Q14. その資料は最新の内容ですか", options: "docFreshness" },
+          { id: "d_q13_loc", type: "checkbox", label: "Q13. 資料がある場合、どこに保存されていますか（複数選択可）", options: "docLocations" },
+          { id: "d_q15_oral", type: "checkbox", label: "Q15. 資料があるのに口頭確認が必要になる理由（複数選択可）", options: "oralReasons" },
+        ],
+      },
+      {
+        id: "d_priority",
+        title: "4-7. 優先的に知識化すべき業務",
+        questions: [
+          {
+            id: "d_q16_priority", type: "name_reason_table",
+            label: "Q16. 優先的に手順書化・知識DB化した方がよい業務",
+            columns: [{ key: "name", label: "業務名" }, { key: "reason", label: "理由" }], max: 6,
+          },
+          {
+            id: "d_q17_only_you", type: "table",
+            label: "Q17. 「この人に聞かないと分からない」と感じる業務",
+            hint: "個人批判を目的とするものではありません。必要に応じて個人名は伏せて構いません。",
+            columns: [
+              { key: "name", label: "業務名" },
+              { key: "reason", label: "理由" },
+              { key: "note", label: "備考" },
+            ], max: 6,
+          },
+          {
+            id: "d_q18_absent", type: "table",
+            label: "Q18. 退職・異動・長期不在が発生した場合、困る可能性が高い業務",
+            columns: [
+              { key: "name", label: "業務名" },
+              { key: "why", label: "困る理由" },
+              { key: "scope", label: "影響範囲" },
+            ], max: 6,
+          },
+        ],
+      },
+      {
+        id: "d_future",
+        title: "4-8. 今後の知識共有方法について",
+        questions: [
+          { id: "d_q19_methods", type: "checkbox", label: "Q19. 業務知識を残す方法として有効だと思うもの（複数選択可）", options: "shareMethods" },
+          { id: "d_q20_scenes", type: "checkbox", label: "Q20. 業務知識DBがあった場合、役立つと思う場面（複数選択可）", options: "usefulScenes" },
+          { id: "d_q21_free", type: "textarea", label: "Q21. その他、業務知識の共有・引継ぎについて感じていること", rows: 6 },
+        ],
+      },
+    ],
+  },
+};
+  </script>
+
+  <!-- exports.js -->
+  <script>
+function normDifficulty(s) {
+  if (!s) return "";
+  if (s.startsWith("低")) return "低";
+  if (s.startsWith("中")) return "中";
+  if (s.startsWith("高")) return "高";
+  return s;
+}
+const FIELD_MAP = {
+  simple: {
+    respName: "respondent_name",
+    respDept: "respondent_dept",
+    respDate: "respondent_date",
+    tasks: "q1_tasks",
+    q2: "q2_successor",
+    q3: "q3_coverage",
+    q4: "q4_difficulties",
+    q6: "q6_has",
+    q7: "q7_priority",
+    q8: "q8_free",
+  },
+  detail: {
+    respName: "d_main_task",
+    respDept: "d_dept",
+    respDate: "d_date",
+    tasks: "d_tasks_table",
+    q2: "d_q3_succ",
+    q3: "d_q4_cov",
+    q4: "d_q5_diff",
+    q6: "d_q10_has",
+    q7: "d_q16_priority",
+    q8: "d_q21_free",
+  },
+};
+const Q4_COLS = [
+  { col: "Q4_手順複雑",   opt: "手順が複雑" },
+  { col: "Q4_判断基準",   opt: "判断基準が分かりにくい" },
+  { col: "Q4_過去経緯",   opt: "過去経緯を知らないと対応できない" },
+  { col: "Q4_客先注意",   opt: "客先・取引先ごとの注意点がある" },
+  { col: "Q4_ファイル不明", opt: "使用する資料やファイルが分かりにくい" },
+  { col: "Q4_システム",   opt: "システム操作が難しい" },
+  { col: "Q4_例外多",     opt: "例外対応が多い" },
+  { col: "Q4_経験勘",     opt: "経験や勘が必要" },
+];
+function csvEscape(s) {
+  const str = s == null ? "" : String(s);
+  if (/[",\n\r]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
+  return str;
+}
+function rowsToCSV(rows) {
+  return "\ufeff" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
+}
+function buildTaskListCSV(mode, values) {
+  const m = FIELD_MAP[mode];
+  const v = values || {};
+  const header = ["氏名", "業務名", "頻度", "主担当/補助", "難易度", "備考", "代替担当者（Q2）", "資料対応可否（Q3）"];
+  const out = [header];
+  const tasks = Array.isArray(v[m.tasks]) ? v[m.tasks] : [];
+  const name = v[m.respName] || "";
+  const q2 = v[m.q2] || "";
+  const q3 = v[m.q3] || "";
+  for (const t of tasks) {
+    if (!t || !Object.values(t).some(x => x && String(x).trim())) continue;
+    out.push([name, t.name || "", t.frequency || "", t.role || "", normDifficulty(t.difficulty), t.note || "", q2, q3]);
+  }
+  return rowsToCSV(out);
+}
+function buildSummaryCSV(mode, values) {
+  const m = FIELD_MAP[mode];
+  const v = values || {};
+  const header = [
+    "氏名", "部署", "回答日",
+    "Q2代替担当者", "Q3資料対応",
+    ...Q4_COLS.map(c => c.col),
+    "Q6トラブル有無", "Q7優先業務1", "Q7優先業務2", "Q8自由記述",
+  ];
+  const q4set = Array.isArray(v[m.q4]) ? v[m.q4] : [];
+  const q4cells = Q4_COLS.map(c => q4set.includes(c.opt) ? "○" : "");
+  const priority = Array.isArray(v[m.q7]) ? v[m.q7] : [];
+  const p1 = (priority[0] && priority[0].name) || "";
+  const p2 = (priority[1] && priority[1].name) || "";
+  const row = [
+    v[m.respName] || "", v[m.respDept] || "", v[m.respDate] || "",
+    v[m.q2] || "", v[m.q3] || "",
+    ...q4cells,
+    v[m.q6] || "", p1, p2, v[m.q8] || "",
+  ];
+  return rowsToCSV([header, row]);
+}
+function downloadFile(filename, text, mime = "text/csv;charset=utf-8") {
+  const blob = new Blob([text], { type: mime });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+window.AggExport = { buildTaskListCSV, buildSummaryCSV, downloadFile, Q4_COLS };
+  </script>
+
+  <!-- fields.jsx + app.jsx -->
+  <script type="text/babel">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+// ── Atomic inputs ──────────────────────────────────────
+function FieldLabel({ children, required, hint }) {
+  return (
+    <div className="field-label">
+      <span>{children}{required && <span className="req">*</span>}</span>
+      {hint && <span className="field-hint">{hint}</span>}
+    </div>
+  );
+}
+
+function TextField({ id, label, value, onChange, placeholder, required, type = "text" }) {
+  return (
+    <label className="field" htmlFor={id}>
+      <FieldLabel required={required}>{label}</FieldLabel>
+      <input id={id} type={type} className="input" value={value || ""} placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)} />
+    </label>
+  );
+}
+
+function TextAreaField({ id, label, value, onChange, placeholder, rows = 3 }) {
+  return (
+    <label className="field" htmlFor={id}>
+      {label && <FieldLabel>{label}</FieldLabel>}
+      <textarea id={id} className="textarea" rows={rows} value={value || ""}
+        placeholder={placeholder} onChange={(e) => onChange(e.target.value)} />
+    </label>
+  );
+}
+
+function RadioField({ id, label, options, value, onChange }) {
+  return (
+    <div className="field">
+      <FieldLabel>{label}</FieldLabel>
+      <div className="chip-group">
+        {options.map((opt) => {
+          const active = value === opt;
+          return (
+            <button type="button" key={opt}
+              className={"chip " + (active ? "chip--on" : "")}
+              onClick={() => onChange(active ? "" : opt)}>
+              <span className="chip-dot" />{opt}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CheckboxField({ id, label, options, value, onChange }) {
+  const arr = Array.isArray(value) ? value : [];
+  const toggle = (opt) => {
+    const next = arr.includes(opt) ? arr.filter((x) => x !== opt) : [...arr, opt];
+    onChange(next);
+  };
+  return (
+    <div className="field">
+      <FieldLabel>{label}</FieldLabel>
+      <div className="check-grid">
+        {options.map((opt) => {
+          const active = arr.includes(opt);
+          return (
+            <button type="button" key={opt}
+              className={"check " + (active ? "check--on" : "")}
+              onClick={() => toggle(opt)}>
+              <span className="check-box">{active ? "✓" : ""}</span>
+              <span>{opt}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Table-style fields ────────────────────────────────
+function CellInput({ value, onChange, placeholder }) {
+  return (
+    <input type="text" className="cell-input" value={value || ""} placeholder={placeholder}
+      onChange={(e) => onChange(e.target.value)} />
+  );
+}
+
+function CellSelect({ value, onChange, options, placeholder }) {
+  return (
+    <select className="cell-input cell-select" value={value || ""} onChange={(e) => onChange(e.target.value)}>
+      <option value="">{placeholder || "—"}</option>
+      {options.map((o) => <option key={o} value={o}>{o}</option>)}
+    </select>
+  );
+}
+
+function TaskTableField({ value, onChange, example, max = 10, options }) {
+  const rows = Array.isArray(value) && value.length ? value : [{}];
+  const update = (i, key, v) => {
+    const next = rows.map((r, j) => j === i ? { ...r, [key]: v } : r);
+    onChange(next);
+  };
+  const add = () => onChange([...rows, {}]);
+  const remove = (i) => {
+    const next = rows.filter((_, j) => j !== i);
+    onChange(next.length ? next : [{}]);
+  };
+  return (
+    <div className="table-field">
+      <div className="table-scroll">
+        <table className="grid">
+          <colgroup>
+            <col style={{ width: 36 }} />
+            <col style={{ width: "26%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "16%" }} />
+            <col />
+            <col style={{ width: 40 }} />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>業務名</th>
+              <th>頻度</th>
+              <th>主担当 / 補助</th>
+              <th>難易度</th>
+              <th>備考（任意）</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="example-row">
+              <td><span className="row-num">例</span></td>
+              <td>{example.name}</td>
+              <td>{example.frequency}</td>
+              <td>{example.role}</td>
+              <td>{example.difficulty}</td>
+              <td>{example.note}</td>
+              <td></td>
+            </tr>
+            {rows.map((row, i) => (
+              <tr key={i}>
+                <td><span className="row-num">{i + 1}</span></td>
+                <td><CellInput value={row.name} onChange={(v) => update(i, "name", v)} placeholder="業務名を入力" /></td>
+                <td><CellSelect value={row.frequency} onChange={(v) => update(i, "frequency", v)} options={options.frequency} /></td>
+                <td><CellSelect value={row.role} onChange={(v) => update(i, "role", v)} options={options.role} /></td>
+                <td><CellSelect value={row.difficulty} onChange={(v) => update(i, "difficulty", v)} options={options.difficulty} /></td>
+                <td><CellInput value={row.note} onChange={(v) => update(i, "note", v)} placeholder="—" /></td>
+                <td>
+                  <button type="button" className="icon-btn" onClick={() => remove(i)} title="削除">×</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button type="button" className="btn btn--ghost" onClick={add} disabled={rows.length >= max}>
+        ＋ 行を追加 <span className="muted">（{rows.length} / {max}）</span>
+      </button>
+    </div>
+  );
+}
+
+function GenericTable({ cols, value, onChange, max = 6 }) {
+  const rows = Array.isArray(value) && value.length ? value : [{}];
+  const update = (i, key, v) => onChange(rows.map((r, j) => j === i ? { ...r, [key]: v } : r));
+  const add = () => onChange([...rows, {}]);
+  const remove = (i) => {
+    const next = rows.filter((_, j) => j !== i);
+    onChange(next.length ? next : [{}]);
+  };
+  return (
+    <div className="table-field">
+      <div className="table-scroll">
+        <table className="grid">
+          <thead>
+            <tr>
+              <th style={{ width: 36 }}>#</th>
+              {cols.map((c) => <th key={c.key}>{c.label}</th>)}
+              <th style={{ width: 40 }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i}>
+                <td><span className="row-num">{i + 1}</span></td>
+                {cols.map((c) => (
+                  <td key={c.key}>
+                    <CellInput value={row[c.key]} onChange={(v) => update(i, c.key, v)} placeholder="—" />
+                  </td>
+                ))}
+                <td>
+                  <button type="button" className="icon-btn" onClick={() => remove(i)} title="削除">×</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button type="button" className="btn btn--ghost" onClick={add} disabled={rows.length >= max}>
+        ＋ 行を追加 <span className="muted">（{rows.length} / {max}）</span>
+      </button>
+    </div>
+  );
+}
+
+// ── App ─────────────────────────────────────────
+
+const STORAGE_KEY = "hikitsugi_survey_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { mode: "simple", values: { simple: {}, detail: {} } };
+    const parsed = JSON.parse(raw);
+    if (!parsed.values) parsed.values = { simple: {}, detail: {} };
+    if (!parsed.values.simple) parsed.values.simple = {};
+    if (!parsed.values.detail) parsed.values.detail = {};
+    return parsed;
+  } catch (e) { return { mode: "simple", values: { simple: {}, detail: {} } }; }
+}
+
+function isAnswered(q, v) {
+  if (v === undefined || v === null || v === "") return false;
+  if (Array.isArray(v)) {
+    if (v.length === 0) return false;
+    if (typeof v[0] === "object") return v.some((row) => Object.values(row).some((x) => x && String(x).trim()));
+    return true;
+  }
+  if (typeof v === "object") return Object.values(v).some((x) => x && String(x).trim());
+  return true;
+}
+
+function questionShouldShow(q, sectionValues) {
+  if (!q.showIf) return true;
+  return sectionValues[q.showIf.field] === q.showIf.equals;
+}
+
+function renderQuestion(q, value, onChange, opts) {
+  switch (q.type) {
+    case "text":
+    case "date":
+      return <TextField id={q.id} label={q.label} value={value} required={q.required}
+        placeholder={q.placeholder} onChange={onChange} type={q.type} />;
+    case "textarea":
+      return <TextAreaField id={q.id} label={q.label} value={value} rows={q.rows || 3}
+        placeholder={q.placeholder} onChange={onChange} />;
+    case "radio":
+      return <RadioField id={q.id} label={q.label} options={opts[q.options]} value={value} onChange={onChange} />;
+    case "checkbox":
+      return <CheckboxField id={q.id} label={q.label} options={opts[q.options]} value={value} onChange={onChange} />;
+    case "task_table":
+      return <TaskTableField value={value} onChange={onChange} example={q.example} max={q.max || 10} options={opts} />;
+    case "trouble_table":
+      return (<>
+        {q.label && <FieldLabel>{q.label}</FieldLabel>}
+        <GenericTable cols={[
+          { key: "name", label: "業務名" },
+          { key: "content", label: "トラブル内容" },
+          { key: "cause", label: "原因" },
+          { key: "save", label: "残すべき情報" },
+        ]} value={value} onChange={onChange} max={q.max || 6} />
+      </>);
+    case "name_reason_table":
+      return (<>
+        {q.label && <FieldLabel>{q.label}</FieldLabel>}
+        <GenericTable cols={q.columns} value={value} onChange={onChange} max={q.max || 6} />
+      </>);
+    case "table":
+      return (<>
+        {q.label && <FieldLabel hint={q.hint}>{q.label}</FieldLabel>}
+        <GenericTable cols={q.columns} value={value} onChange={onChange} max={q.max || 6} />
+      </>);
+    default:
+      return <div>未対応の入力タイプ: {q.type}</div>;
+  }
+}
+
+function Section({ section, values, onChange, index }) {
+  const visibleQs = section.questions.filter((q) => questionShouldShow(q, values));
+  return (
+    <section className="section" data-screen-label={section.title}>
+      <header className="section-head">
+        <div className="section-num">{String(index).padStart(2, "0")}</div>
+        <div>
+          <h2 className="section-title">{section.title}</h2>
+          {section.hint && <p className="section-hint">{section.hint}</p>}
+        </div>
+      </header>
+      <div className="section-body">
+        {visibleQs.map((q) => (
+          <div key={q.id} className="q-block">
+            {renderQuestion(q, values[q.id], (v) => onChange(q.id, v), window.SURVEY_DATA.options)}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function computeProgress(sections, values) {
+  let total = 0, done = 0;
+  for (const s of sections) {
+    for (const q of s.questions) {
+      if (!questionShouldShow(q, values)) continue;
+      total += 1;
+      if (isAnswered(q, values[q.id])) done += 1;
+    }
+  }
+  return { total, done, pct: total === 0 ? 0 : Math.round((done / total) * 100) };
+}
+
+function SideToc({ sections, values }) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const els = sections.map((s) => document.querySelector(`[data-screen-label="${s.title.replace(/"/g, '\\"')}"]`));
+    const onScroll = () => {
+      let idx = 0;
+      for (let i = 0; i < els.length; i++) {
+        const el = els[i];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (r.top < 240) idx = i;
+      }
+      setActive(idx);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [sections]);
+
+  const scrollTo = (s) => {
+    const el = document.querySelector(`[data-screen-label="${s.title.replace(/"/g, '\\"')}"]`);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 200;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  return (
+    <nav className="toc">
+      <div className="toc-title">セクション</div>
+      <ol className="toc-list">
+        {sections.map((s, i) => {
+          const visibleQs = s.questions.filter(q => questionShouldShow(q, values));
+          const doneN = visibleQs.filter(q => isAnswered(q, values[q.id])).length;
+          const isAct = i === active;
+          const complete = doneN === visibleQs.length && visibleQs.length > 0;
+          return (
+            <li key={s.id}>
+              <button type="button" onClick={() => scrollTo(s)}
+                className={"toc-item " + (isAct ? "is-active " : "") + (complete ? "is-complete" : "")}>
+                <span className="toc-num">{String(i + 1).padStart(2, "0")}</span>
+                <span className="toc-text">{s.title.replace(/^Q\d+\.\s*/, "").replace(/^\d-\d\.\s*/, "")}</span>
+                <span className="toc-count">{doneN}/{visibleQs.length}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function ExportModal({ onClose, onPick, mode, values }) {
+  const m = mode === "simple"
+    ? { tasks: "q1_tasks", q4: "q4_difficulties", q7: "q7_priority" }
+    : { tasks: "d_tasks_table", q4: "d_q5_diff", q7: "d_q16_priority" };
+  const taskCount = (Array.isArray(values[m.tasks]) ? values[m.tasks] : []).filter(
+    (r) => r && Object.values(r).some((x) => x && String(x).trim())
+  ).length;
+  const q4Count = Array.isArray(values[m.q4]) ? values[m.q4].length : 0;
+  const priorityCount = (Array.isArray(values[m.q7]) ? values[m.q7] : []).filter(
+    (r) => r && r.name
+  ).length;
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-head">
+          <div>
+            <div className="modal-eyebrow">集計用ファイル向け 書き出し</div>
+            <h3 className="modal-title">どの形式で書き出しますか？</h3>
+          </div>
+          <button type="button" className="icon-btn modal-close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">
+          <button type="button" className="export-card" onClick={() => onPick("both")}>
+            <div className="export-card-tag tag--primary">推奨</div>
+            <div className="export-card-title">両方まとめて</div>
+            <div className="export-card-desc">
+              「①業務一覧DB」と「②回答サマリDB」の2ファイルをまとめてダウンロードします。
+            </div>
+          </button>
+          <button type="button" className="export-card" onClick={() => onPick("tasks")}>
+            <div className="export-card-tag">①</div>
+            <div className="export-card-title">業務一覧DB 用</div>
+            <div className="export-card-desc">
+              担当業務を1行ずつ並べた表。<br />
+              <span className="muted">列: 氏名 / 業務名 / 頻度 / 主担当・補助 / 難易度 / 備考 / 代替担当者(Q2) / 資料対応(Q3)</span>
+            </div>
+            <div className="export-card-meta">記入済み <b>{taskCount}</b> 業務</div>
+          </button>
+          <button type="button" className="export-card" onClick={() => onPick("summary")}>
+            <div className="export-card-tag">②</div>
+            <div className="export-card-title">回答サマリDB 用</div>
+            <div className="export-card-desc">
+              回答者1人につき1行。Q4の選択肢は ○/空白 で書き出します。<br />
+              <span className="muted">列: 氏名 / 部署 / 回答日 / Q2〜Q4 / Q6 / Q7優先業務 / Q8自由記述</span>
+            </div>
+            <div className="export-card-meta">Q4選択 <b>{q4Count}</b> / Q7優先業務 <b>{priorityCount}</b></div>
+          </button>
+        </div>
+        <div className="modal-foot">
+          <div className="modal-hint">
+            集計用ファイル「業務知識引継ぎアンケート_集計用.xlsx」の各シートの<b>2行目以下</b>に貼り付けてください。<br />
+            ヘッダー行（1〜3行目）は上書きしないようご注意ください。
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [state, setState] = useState(loadState);
+  const { mode, values } = state;
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
+
+  const data = window.SURVEY_DATA;
+  const active = data[mode];
+  const setValue = (qid, v) => {
+    setState((s) => ({
+      ...s,
+      values: { ...s.values, [s.mode]: { ...s.values[s.mode], [qid]: v } },
+    }));
+  };
+  const switchMode = (m) => setState((s) => ({ ...s, mode: m }));
+  const progress = useMemo(() => computeProgress(active.sections, values[mode]), [active, values, mode]);
+  const [exportOpen, setExportOpen] = useState(false);
+
+  const doExport = (which) => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    const modeLabel = mode === "simple" ? "簡易版" : "詳細版";
+    const name = (values[mode].respondent_name || values[mode].d_main_task || "無記名")
+      .replace(/[\\/\:*?"<>|]/g, "_");
+    if (which === "tasks" || which === "both") {
+      const csv = window.AggExport.buildTaskListCSV(mode, values[mode]);
+      window.AggExport.downloadFile(`業務一覧DB_${modeLabel}_${name}_${stamp}.csv`, csv);
+    }
+    if (which === "summary" || which === "both") {
+      const csv = window.AggExport.buildSummaryCSV(mode, values[mode]);
+      window.AggExport.downloadFile(`回答サマリDB_${modeLabel}_${name}_${stamp}.csv`, csv);
+    }
+    setExportOpen(false);
+  };
+
+  const handleReset = () => {
+    if (!confirm("入力した内容をすべて消去します。よろしいですか？")) return;
+    setState((s) => ({ ...s, values: { ...s.values, [s.mode]: {} } }));
+  };
+
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="brand">
+            <div className="brand-mark">業</div>
+            <div>
+              <div className="brand-title">{data.meta.title}</div>
+              <div className="brand-sub">{data.meta.subtitle}</div>
+            </div>
+          </div>
+          <div className="topbar-actions">
+            <button type="button" className="btn btn--ghost" onClick={handleReset}>クリア</button>
+            <button type="button" className="btn btn--primary" onClick={() => setExportOpen(true)}>
+              CSVで書き出し
+            </button>
+          </div>
+        </div>
+        <div className="mode-tabs" role="tablist">
+          <button role="tab" className={"mode-tab " + (mode === "simple" ? "is-active" : "")}
+            onClick={() => switchMode("simple")}>
+            <span className="mode-tab-label">簡易版</span>
+            <span className="mode-tab-meta">所要 約{data.simple.estMinutes}・全{data.simple.sections.length}セクション</span>
+          </button>
+          <button role="tab" className={"mode-tab " + (mode === "detail" ? "is-active" : "")}
+            onClick={() => switchMode("detail")}>
+            <span className="mode-tab-label">詳細版</span>
+            <span className="mode-tab-meta">所要 約{data.detail.estMinutes}・全{data.detail.sections.length}セクション</span>
+          </button>
+        </div>
+        <div className="progress-row">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progress.pct}%` }} />
+          </div>
+          <div className="progress-text">
+            <span className="progress-num">{progress.done}</span>
+            <span className="progress-sep">/ {progress.total}</span>
+            <span className="progress-pct">{progress.pct}%</span>
+          </div>
+        </div>
+      </header>
+
+      {exportOpen && <ExportModal onClose={() => setExportOpen(false)} onPick={doExport} mode={mode} values={values[mode]} />}
+
+      <main className="content">
+        {mode === "detail" && data.detail.intro && (
+          <div className="intro-card">{data.detail.intro}</div>
+        )}
+        <SideToc sections={active.sections} values={values[mode]} />
+        <div className="sections">
+          {active.sections.map((s, i) => (
+            <Section key={s.id} section={s} index={i + 1} total={active.sections.length}
+              values={values[mode]} onChange={setValue} />
+          ))}
+          <div className="footer-actions">
+            <button type="button" className="btn btn--primary btn--lg" onClick={() => setExportOpen(true)}>
+              CSVで書き出して提出
+            </button>
+            <p className="autosave-note">
+              書き出したCSVは「業務知識引継ぎアンケート_集計用.xlsx」にそのまま貼り付けて集計できます。<br />
+              入力内容はこの端末に自動保存されています。閉じても次回続きから入力できます。
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
